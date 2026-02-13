@@ -30,7 +30,9 @@ public:
         addIdleCallback(this);
 
         WebViewOptions options;
-        options.callback = _webViewMessageCallback;
+        options.callback = [](void* const arg, char* const msg){
+            static_cast<AnfimaWebWindow*>(arg)->webViewMessageCallback(msg);
+        };
         options.callbackPtr = this;
         options.initialJS = "const RunningFromDPF = true;";
 
@@ -61,11 +63,6 @@ protected:
     void webViewMessageCallback(char* msg)
     {
         d_debug("webViewMessageCallback: \n%s\n", msg);
-    }
-
-    static void _webViewMessageCallback(void* arg, char* msg)
-    {
-        static_cast<AnfimaWebWindow*>(arg)->webViewMessageCallback(msg);
     }
 
     DISTRHO_DECLARE_NON_COPYABLE(AnfimaWebWindow);
