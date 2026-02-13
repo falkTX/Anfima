@@ -6,12 +6,8 @@
 #include "webserver.hpp"
 #include "extra/Time.hpp"
 
-#include <cstdio>
-
 extern "C" {
-#define WebServer WebServerC
 #include "WebServer.h"
-#undef WebServer
 }
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -44,13 +40,6 @@ static constexpr const WebServerFile kWebServerFiles[] = {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-struct WebServer {
-    // TODO
-    bool todo;
-};
-
-// --------------------------------------------------------------------------------------------------------------------
-
 bool FS_GetFileProperties(const char* const filename, struct WSPageProp* const prop)
 {
     for (uint8_t i = 0; i < ARRAY_SIZE(kWebServerFiles); ++i)
@@ -71,7 +60,7 @@ bool FS_GetFileProperties(const char* const filename, struct WSPageProp* const p
     return false;
 }
 
-void FS_SendFile(struct WebServerC* const web, const void* const fileData)
+void FS_SendFile(WebServerContext* const web, const void* const fileData)
 {
     const WebServerFile* const filePtr = reinterpret_cast<const WebServerFile*>(fileData);
     DISTRHO_SAFE_ASSERT_RETURN(filePtr != nullptr,);
@@ -90,29 +79,20 @@ t_ElapsedTime ReadElapsedClock()
 struct WebServer* webserver_init()
 {
     SocketsCon_InitSocketConSystem();
-    WS_Init();
 
-    if(! WS_Start(8888))
-    {
-        fprintf(stderr, "Failed to start web server\n");
-        return NULL;
-    }
-
-    struct WebServer* webServer = static_cast<WebServer*>(std::malloc(sizeof(WebServer)));
-    webServer->todo = true;
-
-    return webServer;
+    return WS_Init(8888);
 }
 
 bool webserver_idle(struct WebServer* const webServer)
 {
-    WS_Tick();
+    WS_Tick(webServer);
     return true;
 }
 
 void webserver_close(struct WebServer* const webServer)
 {
-    WS_Shutdown();
+    WS_Shutdown(webServer);
+
     SocketsCon_ShutdownSocketConSystem();
 }
 

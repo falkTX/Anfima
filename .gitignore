@@ -3,3 +3,4 @@ build/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+*.kdev4
