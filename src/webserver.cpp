@@ -23,6 +23,15 @@ static constexpr const char html_index[] = R"(
   </head>
   <body>
     Hello World!
+    <script>
+        let counter = 0;
+        function triggerCounter () {
+            ++counter;
+            document.getElementsByTagName('body')[0].textContent = "Hello World " + counter + "!";
+            setTimeout(triggerCounter, 500);
+        };
+        triggerCounter();
+    </script>
   </body>
 </html>
 )";
@@ -66,6 +75,7 @@ void FS_SendFile(WebServerContext* const web, const void* const fileData)
     DISTRHO_SAFE_ASSERT_RETURN(filePtr != nullptr,);
 
     const WebServerFile& file = *filePtr;
+    d_stdout("Serving file: %s", file.filename);
     WS_WriteWhole(web, file.type, file.data, file.size);
 }
 

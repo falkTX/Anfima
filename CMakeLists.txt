@@ -27,8 +27,9 @@ add_subdirectory(deps/hidapi)
 add_subdirectory(deps/libfios)
 
 dpf_add_executable(anfima
-  UI_TYPE webview
+  UI_TYPE external
   USE_FILE_BROWSER
+  USE_WEB_VIEW
 )
 
 set_target_properties(anfima

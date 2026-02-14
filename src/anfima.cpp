@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: ISC
 
 #include "Application.hpp"
+#include "TopLevelWidget.hpp"
+#include "Color.hpp"
+#include "Geometry.hpp"
 #include "WebView.hpp"
 #include "Window.hpp"
 
@@ -22,9 +25,11 @@ public:
         : Window(app)
     {
         const double scaleFactor = getScaleFactor();
-        setGeometryConstraints(kMinimumWidth * scaleFactor, kMinimumHeight * scaleFactor);
-        setSize(kMinimumWidth * scaleFactor, kMinimumHeight * scaleFactor);
+        const uint width = kMinimumWidth * scaleFactor;
+        const uint height = kMinimumHeight * scaleFactor;
         setResizable(true);
+        setGeometryConstraints(width, height);
+        setSize(width, height);
         setTitle("Anfima");
 
         addIdleCallback(this);
