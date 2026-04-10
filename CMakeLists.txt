@@ -55,7 +55,7 @@ target_include_directories(anfima
 )
 
 target_link_libraries(anfima
-  PUBLIC
+  PRIVATE
     bittyhttp::interface
     hidapi::hidapi
     libfios::interface
