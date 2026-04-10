@@ -7,18 +7,18 @@
     <link rel="stylesheet" type="text/css" href="uikit/uikit-css.min.css?v=@CMAKE_PROJECT_VERSION@">
     <title>Anfima</title>
   </head>
-<!--   uk-height-viewport -->
+<!--    -->
 <!-- data-uk-height-viewport -->
-  <body class="welcome uk-background-secondary uk-light">
+  <body class="anfima-welcome uk-background-secondary uk-light uk-height-viewport">
 
     <!-- navbar -->
-    <nav id="navbar" class="uk-navbar-container uk-navbar-transparent">
+    <nav class="uk-navbar-container uk-navbar-transparent">
       <div class="uk-container">
         <div uk-navbar>
           <div class="uk-navbar-left">
             <ul class="uk-navbar-nav">
-              <li id="page-file-manager"><a href="#">File Manager</a></li>
-              <li id="page-preset-manager"><a href="#">Preset Manager</a></li>
+              <li id="anfima-li-file-manager" class="uk-active"><a href="#">File Manager</a></li>
+              <li id="anfima-li-preset-manager"><a href="#">Preset Manager</a></li>
             </ul>
           </div>
         </div>
@@ -27,7 +27,66 @@
     <!-- /navbar -->
 
     <!-- main container -->
-    <div class="uk-container" style="background-color:#111;">
+    <div class="uk-container"> <!--style="background-color:#111;"-->
+
+      <div class="uk-section uk-section-xsmall">
+        <div class="uk-container">
+          <h3>Tests</h3>
+          <button class="uk-button uk-button-default">Test Button</button>
+        </div>
+      </div>
+
+      <div class="uk-section uk-section-xsmall">
+        <div class="uk-container">
+          <h3>Files</h3>
+          <ul class="uk-list uk-list-collapse uk-list-striped">
+            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
+              <div class="uk-inline">
+                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
+                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small" aria-label="Small" disabled>
+              </div>
+              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
+                <option>Opt 1</option>
+                <option>Opt 2</option>
+              </select>
+              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
+            </li>
+            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
+              <div class="uk-inline">
+                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
+                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small2" aria-label="Small" disabled>
+              </div>
+              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
+                <option>Opt 1</option>
+                <option>Opt 2</option>
+              </select>
+              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
+            </li>
+            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
+              <div class="uk-inline">
+                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
+                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small3" aria-label="Small" disabled>
+              </div>
+              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
+                <option>Opt 1</option>
+                <option>Opt 2</option>
+              </select>
+              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
+            </li>
+            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
+              <div class="uk-inline">
+                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
+                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small4 with a very long name for testing purposes" aria-label="Small" disabled>
+              </div>
+              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
+                <option>Opt 1</option>
+                <option>Opt 2</option>
+              </select>
+              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
+            </li>
+          </div>
+        </div>
+      </div>
 
     </div>
     <!-- /main container -->
