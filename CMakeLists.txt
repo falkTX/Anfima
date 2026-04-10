@@ -73,12 +73,13 @@ target_sources(anfima
 # setup resources
 
 function(anfima_resource FILENAME)
-  configure_file(src/html/${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/html/${FILENAME} @ONLY)
-
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.cpp
-    COMMAND ${CMAKE_COMMAND} -D INPUT=${CMAKE_CURRENT_BINARY_DIR}/html/${FILENAME} -P ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/${FILENAME}
+    COMMAND ${CMAKE_COMMAND}
+      -D INPUT_BASEPATH=${FILENAME}
+      -D INPUT_FULLPATH=${CMAKE_CURRENT_SOURCE_DIR}/src/html/${FILENAME}
+      -P ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
+    DEPENDS src/html/${FILENAME}
     VERBATIM
   )
 
