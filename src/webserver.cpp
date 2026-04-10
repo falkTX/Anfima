@@ -86,27 +86,26 @@ t_ElapsedTime ReadElapsedClock()
 
 // --------------------------------------------------------------------------------------------------------------------
 
-struct WebServer* webserver_init()
+WebServer* webserver_init()
 {
     SocketsCon_InitSocketConSystem();
 
     return WS_Init(8888);
 }
 
-bool webserver_idle(struct WebServer* const webServer)
+bool webserver_idle(WebServer* const webServer)
 {
     WS_Tick(webServer);
     return true;
 }
 
-void webserver_close(struct WebServer* const webServer)
+void webserver_close(WebServer* const webServer)
 {
     WS_Shutdown(webServer);
-
     SocketsCon_ShutdownSocketConSystem();
 }
 
-const char* webserver_error(struct WebServer* const webServer)
+const char* webserver_error(WebServer* const webServer)
 {
     return nullptr;
 }

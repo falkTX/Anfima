@@ -47,6 +47,7 @@ target_link_libraries(anfima
     bittyhttp::interface
     hidapi::hidapi
     libfios::interface
+    $<$<BOOL:${WIN32}>:winmm>
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
