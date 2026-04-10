@@ -3,12 +3,11 @@
 
 #include "Application.hpp"
 #include "TopLevelWidget.hpp"
-#include "Color.hpp"
 #include "Geometry.hpp"
 #include "WebView.hpp"
 #include "Window.hpp"
 
-#include "webserver.hpp"
+#include "webserver.h"
 
 class AnfimaWebWindow : public Window,
                         private IdleCallback

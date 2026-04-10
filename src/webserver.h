@@ -12,6 +12,7 @@ extern "C" {
 struct WebServer;
 
 struct WebServer* webserver_init();
+int webserver_port(struct WebServer* webServer);
 bool webserver_idle(struct WebServer* webserver);
 void webserver_close(struct WebServer* webserver);
 

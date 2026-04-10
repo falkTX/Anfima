@@ -3,7 +3,10 @@
 
 // TODO remove use of global vars in bittyhttp
 
-#include "webserver.hpp"
+// TODO make port arbitrary, run-time detection
+#define WEBSERVER_STATIC_PORT_FIXME 8888
+
+#include "webserver.h"
 #include "extra/Time.hpp"
 
 extern "C" {
@@ -12,39 +15,23 @@ extern "C" {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-static constexpr const char html_index[] = R"(
-<!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="cache-control" content="no-cache" />
-    <title>Anfima</title>
-  </head>
-  <body>
-    Hello World!
-    <script>
-        let counter = 0;
-        function triggerCounter () {
-            ++counter;
-            document.getElementsByTagName('body')[0].textContent = "Hello World " + counter + "!";
-            setTimeout(triggerCounter, 500);
-        };
-        triggerCounter();
-    </script>
-  </body>
-</html>
-)";
+#include "html-data/index.html.h"
+#include "html-data/uikit/uikit-css.min.css.h"
+#include "html-data/uikit/uikit-icons.min.js.h"
+#include "html-data/uikit/uikit-js.min.js.h"
 
 struct WebServerFile {
     const char* filename;
     const char* type;
-    const char* data;
+    const unsigned char* data;
     unsigned int size;
 };
 
 static constexpr const WebServerFile kWebServerFiles[] = {
-    { "/", "text/html", html_index, sizeof(html_index) },
+    { "/", "text/html", INDEX_HTML_DATA, INDEX_HTML_LEN },
+    { "/uikit/uikit-css.min.css", "text/css", UIKIT_UIKIT_CSS_MIN_CSS_DATA, UIKIT_UIKIT_CSS_MIN_CSS_LEN },
+    { "/uikit/uikit-icons.min.js", "text/javascript", UIKIT_UIKIT_ICONS_MIN_JS_DATA, UIKIT_UIKIT_ICONS_MIN_JS_LEN },
+    { "/uikit/uikit-js.min.js", "text/javascript", UIKIT_UIKIT_JS_MIN_JS_DATA, UIKIT_UIKIT_JS_MIN_JS_LEN },
 };
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -66,6 +53,7 @@ bool FS_GetFileProperties(const char* const filename, struct WSPageProp* const p
         }
     }
 
+    d_stderr("Not Found: %s", filename);
     return false;
 }
 
@@ -90,7 +78,12 @@ WebServer* webserver_init()
 {
     SocketsCon_InitSocketConSystem();
 
-    return WS_Init(8888);
+    return WS_Init(WEBSERVER_STATIC_PORT_FIXME);
+}
+
+int webserver_port(WebServer* const webServer)
+{
+    return WEBSERVER_STATIC_PORT_FIXME;
 }
 
 bool webserver_idle(WebServer* const webServer)

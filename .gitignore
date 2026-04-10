@@ -1,6 +1,8 @@
 CMakeFiles/
 build/
+build-win64/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+.cache
 *.kdev4
