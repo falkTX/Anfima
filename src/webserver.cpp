@@ -21,6 +21,9 @@ extern "C" {
 
 #include "html-data/index.html.h"
 #include "html-data/js/anfima.js.h"
+#include "html-data/js/backend.js.h"
+#include "html-data/js/file-manager.js.h"
+#include "html-data/js/backends/dummy.js.h"
 #include "html-data/uikit/uikit-css.min.css.h"
 #include "html-data/uikit/uikit-icons.min.js.h"
 #include "html-data/uikit/uikit-js.min.js.h"
@@ -35,6 +38,9 @@ struct WebServerFile {
 static constexpr const WebServerFile kWebServerFiles[] = {
     { "/",                         MIMETYPE_HTML, INDEX_HTML_DATA,               INDEX_HTML_LEN               },
     { "/js/anfima.js",             MIMETYPE_JS,   JS_ANFIMA_JS_DATA,             JS_ANFIMA_JS_LEN             },
+    { "/js/backend.js",            MIMETYPE_JS,   JS_BACKEND_JS_DATA,            JS_BACKEND_JS_LEN            },
+    { "/js/file-manager.js",       MIMETYPE_JS,   JS_FILE_MANAGER_JS_DATA,       JS_FILE_MANAGER_JS_LEN       },
+    { "/js/backends/dummy.js",     MIMETYPE_JS,   JS_BACKENDS_DUMMY_JS_DATA,     JS_BACKENDS_DUMMY_JS_LEN     },
     { "/uikit/uikit-css.min.css",  MIMETYPE_CSS,  UIKIT_UIKIT_CSS_MIN_CSS_DATA,  UIKIT_UIKIT_CSS_MIN_CSS_LEN  },
     { "/uikit/uikit-icons.min.js", MIMETYPE_JS,   UIKIT_UIKIT_ICONS_MIN_JS_DATA, UIKIT_UIKIT_ICONS_MIN_JS_LEN },
     { "/uikit/uikit-js.min.js",    MIMETYPE_JS,   UIKIT_UIKIT_JS_MIN_JS_DATA,    UIKIT_UIKIT_JS_MIN_JS_LEN    },

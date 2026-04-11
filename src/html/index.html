@@ -11,6 +11,32 @@
 <!-- data-uk-height-viewport -->
   <body class="anfima-welcome uk-background-secondary uk-light uk-height-viewport">
 
+    <!-- modals -->
+    <form class="uk-modal" id="anfima-modal-file-rename" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-body uk-background-secondary">
+          <label>Name:</label>
+          <input class="uk-input" type="text" autofocus required>
+        </div>
+        <div class="uk-modal-footer uk-background-secondary uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+          <button class="uk-button uk-button-primary" href="#anfima-modal-report" id="anfima-modal-file-rename-submit" type="submit">Rename</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="uk-modal" id="anfima-modal-report" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-body uk-background-secondary">
+          <p>If you see this message, something went wrong!</p>
+        </div>
+        <div class="uk-modal-footer uk-background-secondary uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- /modals -->
+
     <!-- navbar -->
     <nav class="uk-navbar-container uk-navbar-transparent">
       <div class="uk-container">
@@ -31,6 +57,13 @@
 
       <div class="uk-section uk-section-xsmall">
         <div class="uk-container">
+          <h3>Welcome</h3>
+          <span id="anfima-welcome-status">Welcome to Anfima!</span>
+        </div>
+      </div>
+
+      <div class="uk-section uk-section-xsmall">
+        <div class="uk-container">
           <h3>Tests</h3>
           <button class="uk-button uk-button-default">Test Buttons</button>
         </div>
@@ -39,51 +72,19 @@
       <div class="uk-section uk-section-xsmall">
         <div class="uk-container">
           <h3>Files</h3>
-          <ul class="uk-list uk-list-collapse uk-list-striped">
-            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
-              <div class="uk-inline">
-                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
-                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small" aria-label="Small" disabled>
-              </div>
-              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
-                <option>Opt 1</option>
-                <option>Opt 2</option>
-              </select>
-              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
-            </li>
-            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
-              <div class="uk-inline">
-                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
-                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small2" aria-label="Small" disabled>
-              </div>
-              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
-                <option>Opt 1</option>
-                <option>Opt 2</option>
-              </select>
-              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
-            </li>
-            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
-              <div class="uk-inline">
-                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
-                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small3" aria-label="Small" disabled>
-              </div>
-              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
-                <option>Opt 1</option>
-                <option>Opt 2</option>
-              </select>
-              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
-            </li>
-            <li class="uk-form-horizontal uk-container uk-margin-xsmall">
-              <div class="uk-inline">
-                <a class="uk-form-icon" href="#" uk-icon="icon: pencil"></a>
-                <input class="uk-input uk-form-width-medium uk-form-small" type="text" placeholder="Small4 with a very long name for testing purposes" aria-label="Small" disabled>
-              </div>
-              <select class="uk-select uk-form-width-xsmall uk-form-small" aria-label="Small">
-                <option>Opt 1</option>
-                <option>Opt 2</option>
-              </select>
-              <label><input class="uk-checkbox uk-form-small" type="checkbox"> Yes?</label>
-            </li>
+
+          <div class="uk-padding-small uk-flex uk-flex-between">
+            <div>
+              <button id="anfima-file-manager-select-all" class="uk-button uk-button-default">Select All</button>
+            </div>
+            <div>
+              <button class="uk-button uk-button-primary" uk-toggle="target: #file-manager-add">Add...</button>
+            </div>
+          </div>
+
+          <div class="uk-container" id="anfima-file-manager-container">
+            <ul class="uk-list uk-list-collapse uk-list-striped">
+            </ul>
           </div>
         </div>
       </div>
@@ -91,8 +92,12 @@
     </div>
     <!-- /main container -->
 
-    <script src="anfima.js?v=@VERSION@"></script>
+    <script async src="js/backend.js?v=@VERSION@"></script>
+    <script async src="js/file-manager.js?v=@VERSION@"></script>
+    <script async src="js/backends/dummy.js?v=@VERSION@"></script>
     <script src="uikit/uikit-js.min.js?v=@UIKIT_VERSION@"></script>
-    <script src="uikit/uikit-icons.min.js?v=@UIKIT_VERSION@"></script>
+    <script async src="uikit/uikit-icons.min.js?v=@UIKIT_VERSION@"></script>
+    <!-- main entry point, make sure it is last -->
+    <script src="js/anfima.js?v=@VERSION@"></script>
   </body>
 </html>
