@@ -78,8 +78,9 @@ function(anfima_resource FILENAME)
     COMMAND ${CMAKE_COMMAND}
       -D INPUT_BASEPATH=${FILENAME}
       -D INPUT_FULLPATH=${CMAKE_CURRENT_SOURCE_DIR}/src/html/${FILENAME}
+      -D VERSION=${CMAKE_PROJECT_VERSION}
       -P ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
-    DEPENDS src/html/${FILENAME}
+    DEPENDS src/html/${FILENAME} ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
     VERBATIM
   )
 
@@ -92,6 +93,7 @@ endfunction()
 #######################################################################################################################
 
 anfima_resource(index.html)
+anfima_resource(js/anfima.js)
 anfima_resource(uikit/uikit-css.min.css)
 anfima_resource(uikit/uikit-icons.min.js)
 anfima_resource(uikit/uikit-js.min.js)
