@@ -32,6 +32,14 @@ const initBackend = () => {
 
     backend.postInit();
 
+    // all supported functions
+    backend.findUserFiles = async () => {
+        return await backend.data.postMessageWithReply({
+            action: 'find_user_files',
+            payload: {},
+        });
+    };
+
     return backend;
 }
 

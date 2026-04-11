@@ -86,31 +86,31 @@ t_ElapsedTime ReadElapsedClock()
 
 // --------------------------------------------------------------------------------------------------------------------
 
-WebServer* webserver_init()
+WebServer* anfima_webserver_init()
 {
     SocketsCon_InitSocketConSystem();
 
     return WS_Init(WEBSERVER_STATIC_PORT_FIXME);
 }
 
-int webserver_port(WebServer* const webServer)
+int anfima_webserver_port(WebServer* const webServer)
 {
     return WEBSERVER_STATIC_PORT_FIXME;
 }
 
-bool webserver_idle(WebServer* const webServer)
+bool anfima_webserver_idle(WebServer* const webServer)
 {
     WS_Tick(webServer);
     return true;
 }
 
-void webserver_close(WebServer* const webServer)
+void anfima_webserver_close(WebServer* const webServer)
 {
     WS_Shutdown(webServer);
     SocketsCon_ShutdownSocketConSystem();
 }
 
-const char* webserver_error(WebServer* const webServer)
+const char* anfima_webserver_error(WebServer* const webServer)
 {
     return nullptr;
 }

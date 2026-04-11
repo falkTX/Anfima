@@ -11,12 +11,12 @@ extern "C" {
 
 struct WebServer;
 
-struct WebServer* webserver_init();
-int webserver_port(struct WebServer* webServer);
-bool webserver_idle(struct WebServer* webserver);
-void webserver_close(struct WebServer* webserver);
+struct WebServer* anfima_webserver_init();
+int anfima_webserver_port(struct WebServer* webServer);
+bool anfima_webserver_idle(struct WebServer* webserver);
+void anfima_webserver_close(struct WebServer* webserver);
 
-const char* webserver_error(struct WebServer* webserver);
+const char* anfima_webserver_error(struct WebServer* webserver);
 
 #ifdef __cplusplus
 }

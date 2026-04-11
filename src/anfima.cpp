@@ -15,7 +15,7 @@ class AnfimaWebWindow : public Window,
     static constexpr const uint kMinimumWidth = 998;
     static constexpr const uint kMinimumHeight = 600;
 
-    WebServer* webServer = webserver_init();
+    WebServer* webServer = anfima_webserver_init();
 
     bool webViewOk = false;
 
@@ -46,7 +46,7 @@ public:
     ~AnfimaWebWindow()
     {
         if (webServer != nullptr)
-            webserver_close(webServer);
+            anfima_webserver_close(webServer);
     }
 
     bool ok() const noexcept
@@ -57,9 +57,9 @@ public:
 protected:
     void idleCallback() override
     {
-        if (webServer != nullptr && ! webserver_idle(webServer))
+        if (webServer != nullptr && ! anfima_webserver_idle(webServer))
         {
-            webserver_close(webServer);
+            anfima_webserver_close(webServer);
             webServer = nullptr;
         }
     }

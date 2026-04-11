@@ -105,10 +105,7 @@ const initFileManager = async (backend, logger) => {
 
     logger.info('Requesting user file list...');
 
-    const res = await backend.data.postMessageWithReply({
-        action: 'find_user_files',
-        payload: {},
-    });
+    const res = await backend.findUserFiles();
 
     let elemdata = '<ul class="uk-list uk-list-collapse uk-list-striped">'
     for (let data of res.payload.data) {
