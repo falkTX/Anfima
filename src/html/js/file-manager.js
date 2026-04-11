@@ -4,11 +4,13 @@
 const initFileManager = async (backend, logger) => {
     const elems = {
         container: document.getElementById('anfima-file-manager-container'),
+        add: document.getElementById('anfima-file-manager-add'),
+        addModal: document.getElementById('anfima-modal-file-add'),
         renameModal: document.getElementById('anfima-modal-file-rename'),
         selectAll: document.getElementById('anfima-file-manager-select-all'),
     };
 
-    const createItem = ({ category, dir_name, fileName, id, name }) => `
+    const createItem = ({ category, id, name }) => `
 <li class="uk-form-horizontal uk-container uk-margin-xsmall">
   <input class="uk-checkbox uk-margin-xsmall-bottom uk-margin-xsmall-left uk-margin-xsmall-right uk-margin-xsmall-top" type="checkbox">
   <div class="uk-inline">
@@ -31,9 +33,25 @@ const initFileManager = async (backend, logger) => {
         span: undefined,
     };
 
-    elems.renameModal.onsubmit = async function (e) {
-        e.preventDefault();
-        e.target.blur();
+    elems.add.onclick = () => {
+        const input = elems.addModal.children[0].children[0].children[1];
+        input.value = 'This is a test';
+        UIkit.modal(elems.addModal).show();
+    };
+
+    elems.addModal.onsubmit = async (e) => {
+        logger.useReportElem();
+        logger.info('Adding file...');
+
+        // TODO
+        setTimeout(() => {
+            logger.info('File has been added successfully');
+        }, 1000);
+    };
+
+    elems.renameModal.onsubmit = async (e) => {
+        // e.preventDefault();
+        // e.target.blur();
 
         // if (! this.checkValidity()) {
         //     return;

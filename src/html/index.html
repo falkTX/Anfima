@@ -7,11 +7,22 @@
     <link rel="stylesheet" type="text/css" href="uikit/uikit-css.min.css?v=@UIKIT_VERSION@">
     <title>Anfima</title>
   </head>
-<!--    -->
-<!-- data-uk-height-viewport -->
   <body class="anfima-welcome uk-background-secondary uk-light uk-height-viewport">
 
     <!-- modals -->
+    <form class="uk-modal" id="anfima-modal-file-add" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-body uk-background-secondary">
+          <label>Name:</label>
+          <input class="uk-input" type="text" autofocus required>
+        </div>
+        <div class="uk-modal-footer uk-background-secondary uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+          <button class="uk-button uk-button-primary" href="#anfima-modal-report" type="submit">Add</button>
+        </div>
+      </div>
+    </form>
+
     <form class="uk-modal" id="anfima-modal-file-rename" uk-modal>
       <div class="uk-modal-dialog">
         <div class="uk-modal-body uk-background-secondary">
@@ -20,7 +31,7 @@
         </div>
         <div class="uk-modal-footer uk-background-secondary uk-text-right">
           <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-          <button class="uk-button uk-button-primary" href="#anfima-modal-report" id="anfima-modal-file-rename-submit" type="submit">Rename</button>
+          <button class="uk-button uk-button-primary" href="#anfima-modal-report" type="submit">Rename</button>
         </div>
       </div>
     </form>
@@ -78,7 +89,7 @@
               <button id="anfima-file-manager-select-all" class="uk-button uk-button-default">Select All</button>
             </div>
             <div>
-              <button class="uk-button uk-button-primary" uk-toggle="target: #file-manager-add">Add...</button>
+              <button id="anfima-file-manager-add" class="uk-button uk-button-primary">Add...</button>
             </div>
           </div>
 

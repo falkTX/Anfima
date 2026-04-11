@@ -74,19 +74,24 @@ target_sources(anfima
 
 function(anfima_resource FILENAME)
   add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.cpp
+    OUTPUT
+      ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.cpp
+      ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.h
     COMMAND ${CMAKE_COMMAND}
       -D INPUT_BASEPATH=${FILENAME}
       -D INPUT_FULLPATH=${CMAKE_CURRENT_SOURCE_DIR}/src/html/${FILENAME}
       -D VERSION=${CMAKE_PROJECT_VERSION}
       -P ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
-    DEPENDS src/html/${FILENAME} ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
+    DEPENDS
+      src/html/${FILENAME}
+      ${CMAKE_SOURCE_DIR}/utils/res2c.cmake
     VERBATIM
   )
 
   target_sources(anfima
     PRIVATE
       ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.cpp
+      ${CMAKE_CURRENT_BINARY_DIR}/html-data/${FILENAME}.h
   )
 endfunction()
 
