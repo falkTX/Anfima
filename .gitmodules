@@ -1,0 +1,24 @@
+[submodule "deps/hidapi"]
+	path = deps/hidapi
+	url = https://github.com/libusb/hidapi.git
+[submodule "deps/libfios"]
+	path = deps/libfios
+	url = https://github.com/Darkglass-Electronics/libfios.git
+[submodule "deps/dpf"]
+	path = deps/dpf
+	url = https://github.com/DISTRHO/DPF.git
+[submodule "deps/bittyhttp"]
+	path = deps/bittyhttp
+	url = https://github.com/falkTX/BittyHTTP.git
+[submodule "deps/emsdk"]
+	path = deps/emsdk
+	url = https://github.com/emscripten-core/emsdk.git
+[submodule "deps/dr_libs"]
+	path = deps/dr_libs
+	url = https://github.com/mackron/dr_libs.git
+[submodule "deps/speexdsp"]
+	path = deps/speexdsp
+	url = https://github.com/xiph/speexdsp.git
+[submodule "deps/json"]
+	path = deps/json
+	url = https://github.com/nlohmann/json.git

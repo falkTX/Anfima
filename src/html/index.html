@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#222222" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:description" content="A research project for a new File Manager for Anagram, cross-platform and web compatible.">
+    <meta property="og:image" content="https://anfima.falktx.berlin/anfima-og.png"/>
+    <meta property="og:image" content="https://anfima.falktx.berlin/anfima-og.svg"/>
+    <meta property="og:title" content="Anfima - Anagram File Manager">
+    <meta property="og:url" content="https://anfima.falktx.berlin/">
+    <link rel="icon" href="anfima.svg" />
+    <link rel="stylesheet" type="text/css" href="uikit/uikit-css.min.css?v=@UIKIT_VERSION@">
+    <script defer src="js/anfima.js?v=@VERSION@"></script>
+    <script defer src="js/backend.js?v=@VERSION@"></script>
+    <script defer src="js/backend-data.js?v=@VERSION@"></script>
+    <script defer src="js/backend-files.js?v=@VERSION@"></script>
+    <script defer src="js/cloud.js?v=@VERSION@"></script>
+    <script defer src="js/cloud-darkglass.js?v=@VERSION@"></script>
+    <script defer src="js/cloud-modaudio.js?v=@VERSION@"></script>
+    <script defer src="js/constants.js?v=@VERSION@"></script>
+    <script defer src="js/dpf.js?v=@VERSION@"></script>
+    <script defer src="js/html.js?v=@VERSION@"></script>
+    <script defer src="js/logger.js?v=@VERSION@"></script>
+    <script defer src="js/utils.js?v=@VERSION@"></script>
+    <script defer src="js/wasm.js?v=@VERSION@"></script>
+    <script defer src="js/backends/simulator.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-bluetooth.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-hid.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-midi.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-serial.js?v=@VERSION@"></script>
+    <script defer src="js/pages/file-manager.js?v=@VERSION@"></script>
+    <script defer src="js/pages/plugin-manager.js?v=@VERSION@"></script>
+    <script defer src="js/pages/preset-manager.js?v=@VERSION@"></script>
+    <script defer src="js/pages/info.js?v=@VERSION@"></script>
+    <script defer src="js/pages/tools.js?v=@VERSION@"></script>
+    <script defer src="js/resources/reset-user-settings.js?v=@VERSION@"></script>
+    <style>
+      .anfima-color-disabled {
+        color: rgba(255,255,255,.4) !important;
+      }
+      .anfima-plugin-card {
+        cursor: pointer;
+        width: 200px;
+      }
+      .anfima-plugin-card-installed:after {
+        background-color: #fff;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #666;
+        content: "INSTALLED";
+        font-family: monospace;
+        font-size: 11px;
+        padding: 2px 2px 0px 2px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .anfima-plugin-card-outdated:after {
+        background-color: #f0506e;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+        content: "OUTDATED";
+        font-family: monospace;
+        font-size: 11px;
+        padding: 2px 2px 0px 2px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .anfima-plugin-card-trial:before {
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 5px;
+        content: "Trial";
+        font-family: monospace;
+        font-size: 36px;
+        font-weight: bold;
+        left: 72px;
+        padding: 5px;
+        position: absolute;
+        top: 100px;
+        transform-origin: left;
+        transform: rotate(-45deg);
+      }
+      #anfima-plugin-manager-info-modal-image {
+        max-width: 400px;
+      }
+      #anfima-plugin-manager-info-modal-parameters table {
+        margin: 0;
+      }
+      .anfima-text-pre {
+        line-break: anywhere;
+        text-wrap-mode: wrap;
+        white-space: pre-wrap;
+      }
+      .anfima-button-none {
+        background: none;
+        text-transform: none;
+      }
+      .anfima-cloud-plugin,
+      .anfima-local-plugin {
+        background-color: #b5b9ba;
+        background-image: linear-gradient(to bottom right, #a9adae, #b5b9ba);
+        border: 3px solid #656766;
+        border-radius: 25px;
+        height: calc(200px - 10px * 2);
+        margin: 2px 22px;
+        width: calc(200px - 25px * 2);
+      }
+      .anfima-local-plugin {
+        line-break: anywhere;
+      }
+      @media (min-width: 461px) {
+        .uk-flex-last\@xs {
+          order: 99;
+        }
+      }
+    </style>
+    <title>Anfima</title>
+  </head>
+  <body class="anfima-welcome uk-background-secondary uk-light uk-height-viewport">
+
+    <noscript>
+      <p><span>Error: JavaScript is required for operating this application</span></p>
+    </noscript>
+
+    <!-- modals -->
+    <div class="uk-modal" id="anfima-modal-report" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-body uk-background-secondary">
+          <p class="anfima-text-pre">If you see this message, something went wrong!</p>
+        </div>
+        <div class="uk-modal-footer uk-background-secondary uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- /modals -->
+
+    <!-- welcome-overlay -->
+    <div class="uk-animation-fade uk-height-viewport uk-hidden uk-width-viewport" id="anfima-welcome-overlay">
+      <div class="uk-overlay uk-overlay-primary uk-position-cover">
+        <div class="uk-position-center">
+          <div class="uk-width-medium uk-padding-small">
+            <div class="uk-text-center uk-text-large uk-margin">
+              <h1>Anfima</h1>
+              <span>Anagram File Manager</span>
+              <strong class="uk-text-small">
+                Version @VERSION@
+              </strong>
+            </div>
+            <div class="uk-text-center uk-margin">
+              <span id="anfima-welcome-status">Press the Connect button to begin</span>
+            </div>
+            <button
+              class="uk-button uk-button-primary uk-border-pill uk-invisible uk-width-1-1"
+              id="anfima-connect"
+              type="button"
+            >
+              Connect
+            </button>
+            &nbsp;
+            <button
+              class="uk-button uk-button-secondary uk-border-pill uk-invisible uk-width-1-1"
+              id="anfima-simulator"
+              type="button"
+            >
+              Use Simulator
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /welcome-overlay -->
+
+    <!-- navbar -->
+    <nav class="uk-hidden uk-navbar-container uk-navbar-transparent" id="anfima-navbar">
+      <div class="uk-container">
+        <div uk-navbar>
+          <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+              <li class="anfima-navbar-page" id="anfima-navbar-file-manager">
+                <a href="#file-manager">File Manager</a>
+              </li>
+              <li class="anfima-navbar-page" id="anfima-navbar-plugin-manager">
+                <a href="#plugin-manager">Plugin Manager</a>
+              </li>
+              <!--
+              <li class="anfima-navbar-page" id="anfima-navbar-preset-manager">
+                <a href="#preset-manager">Preset Manager</a>
+              </li>
+              -->
+              <li class="anfima-navbar-page" id="anfima-navbar-tools">
+                <a href="#tools">Tools</a>
+              </li>
+              <li class="anfima-navbar-page" id="anfima-navbar-info">
+                <a href="#info">Info</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- /navbar -->
+
+    <!-- main-container -->
+    <div class="uk-hidden uk-container" id="anfima-main-container"> <!--style="background-color:#111;"-->
+
+      <!-- file-manager -->
+      <div class="anfima-page uk-animation-slide-bottom-small uk-animation-fast uk-container" id="anfima-page-file-manager">
+
+        <!-- add-modal -->
+        <form class="uk-modal" id="anfima-file-manager-add-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <div class="uk-margin" id="anfima-file-manager-add-modal-files">
+              </div>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Add</button>
+            </div>
+          </div>
+        </form>
+        <!-- /add-modal -->
+
+        <!-- remove-modal -->
+        <form class="uk-modal" id="anfima-file-manager-remove-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p class="anfima-text-pre">If you see this message, something went wrong!</p>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-danger" type="submit">Delete</button>
+            </div>
+          </div>
+        </form>
+        <!-- /remove-modal -->
+
+        <!-- rename-modal -->
+        <form class="uk-modal" id="anfima-file-manager-rename-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <label for="anfima-file-manager-input-rename">
+                Name:
+              </label>
+              <input class="uk-input" id="anfima-file-manager-input-rename" type="text" autocomplete="off" autofocus required />
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Rename</button>
+            </div>
+          </div>
+        </form>
+        <!-- /rename-modal -->
+
+        <!-- filelist -->
+        <div
+          class="uk-container"
+          id="anfima-file-manager-filter"
+          uk-filter="target: #anfima-file-manager-filelist; animation: fade"
+        >
+          <div class="uk-background-secondary uk-flex uk-flex-between" uk-sticky>
+            <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>
+              <ul id="anfima-file-manager-filter-controls" class="uk-subnav uk-subnav-pill" uk-margin>
+                <li class="uk-active" uk-filter-control="[data-dir-name='cabinets']">
+                  <a href="#">Cabinets</a>
+                </li>
+                <li uk-filter-control="[data-dir-name='neural-models']">
+                  <a href="#">Neural Models</a>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-text-right" id="anfima-file-manager-buttons">
+              <button
+                id="anfima-file-manager-select-all"
+                class="uk-button uk-button-default uk-button-small uk-margin-small uk-margin-small-top uk-invisible"
+              >
+                Select All
+              </button>
+              <button
+                id="anfima-file-manager-remove"
+                class="uk-button uk-button-danger uk-button-small uk-icon uk-margin-small uk-invisible"
+                uk-icon="icon: trash"
+              >
+              </button>
+              <button
+                id="anfima-file-manager-add"
+                class="uk-button uk-button-primary uk-button-small uk-icon uk-margin-small"
+                uk-icon="icon: plus"
+              >
+              </button>
+            </div>
+          </div>
+          <ul class="uk-list uk-list-collapse uk-list-striped" id="anfima-file-manager-filelist">
+          </ul>
+          <div class="uk-hidden uk-placeholder uk-text-center" id="anfima-file-manager-placeholder">
+              No user files.
+          </div>
+        </div>
+        <!-- /filelist -->
+
+      </div>
+      <!-- /file-manager -->
+
+      <!-- plugin-manager -->
+      <div class="anfima-page uk-animation-slide-bottom-small uk-animation-fast uk-container uk-margin-medium-bottom" id="anfima-page-plugin-manager">
+
+        <!-- install-bundle-modal -->
+        <form class="uk-modal" id="anfima-plugin-manager-install-bundle-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p>
+                Notice: Installing plugins outside the marketplace is experimental!<br>
+                This feature is meant for beta-testers and assumes pre-approved communication.
+              </p>
+              <p>
+                Please provide the plugin bundle id to proceed.<br>
+                If you don't know what that is, this feature is not for you.
+              </p>
+              <label for="anfima-plugin-manager-input-bundle-id">
+                Bundle id:
+              </label>
+              <input class="uk-input" id="anfima-plugin-manager-input-bundle-id" type="text" autocomplete="off" autofocus required />
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Install</button>
+            </div>
+          </div>
+        </form>
+        <!-- /install-bundle-modal -->
+
+        <!-- info-modal -->
+        <div class="uk-modal" id="anfima-plugin-manager-info-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <div>
+                <div class="uk-flex uk-flex-center uk-inline">
+                  <img alt="block image" id="anfima-plugin-manager-info-modal-image" src="#" />
+                  <div class="uk-overlay uk-padding-small uk-position-top uk-text-right">
+                    <button class="uk-button uk-button-primary" id="anfima-plugin-manager-info-modal-install">Install</button>
+                    <button class="uk-button uk-button-danger" id="anfima-plugin-manager-info-modal-remove">Remove</button>
+                  </div>
+                </div>
+                <p id="anfima-plugin-manager-info-modal-description">
+                  Description goes here
+                </p>
+              </div>
+              <hr/>
+              <div id="anfima-plugin-manager-info-modal-parameters">
+              </div>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close">Close</button>
+            </div>
+          </div>
+        </div>
+        <!-- /info-modal -->
+
+        <!-- signin-modal -->
+        <form class="uk-modal" id="anfima-plugin-manager-signin-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p>
+                <span>
+                  Please sign-in using your <a href="https://mypedal.darkglass.com/" target="_blank">MyPedal</a> credentials.
+                <span>
+              </p>
+              <label for="anfima-plugin-manager-input-email" id="anfima-plugin-manager-label-email">
+                Email:
+              </label>
+              <input class="uk-input" id="anfima-plugin-manager-input-email" type="text" autocomplete="on" autofocus required />
+              <label for="anfima-plugin-manager-input-password" id="anfima-plugin-manager-label-password">
+                Password:
+              </label>
+              <input class="uk-input" id="anfima-plugin-manager-input-password" type="password" autocomplete="on" required />
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Sign-in</button>
+            </div>
+          </div>
+        </form>
+        <!-- /signin-modal -->
+
+        <!-- warning-modal -->
+        <form class="uk-modal" id="anfima-plugin-manager-warning-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p><span>If you see this message, something went wrong!<span></p>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-danger" type="submit">Proceed</button>
+            </div>
+          </div>
+        </form>
+        <!-- /warning-modal -->
+
+        <!-- grid -->
+        <div
+          class="uk-container"
+          id="anfima-plugin-manager-filter"
+          uk-filter="target: #anfima-plugin-manager-grid; animation: fade"
+        >
+          <div class="uk-background-secondary uk-flex uk-flex-between uk-grid-small uk-child-width-auto" uk-grid uk-sticky>
+            <ul id="anfima-plugin-manager-filter-controls" class="uk-subnav uk-subnav-pill" uk-margin>
+              <li class="uk-active" uk-filter-control>
+                <a href="#">All</a>
+              </li>
+              <li uk-filter-control="[data-type='free']">
+                <a href="#">Free</a>
+              </li>
+              <li uk-filter-control="[data-type='trial']">
+                <a href="#">Trial</a>
+              </li>
+              <li uk-filter-control="[data-type='purchased']">
+                <a href="#">Purchased</a>
+              </li>
+            </ul>
+            <div class="uk-text-right">
+              <button
+                class="uk-button uk-button-primary uk-button-small uk-hidden uk-margin-small uk-margin-small-top"
+                id="anfima-plugin-manager-sign-in"
+              >
+                Sign in
+              </button>
+              <button
+                class="uk-button uk-button-primary uk-button-small uk-margin-small uk-margin-small-top"
+                id="anfima-plugin-manager-update-all"
+              >
+                Update All
+              </button>
+              <div class="uk-inline">
+                <button class="uk-button uk-button-primary uk-button-small uk-icon" uk-icon="icon: more-vertical"></button>
+                <div
+                  class="uk-dropdown uk-width-small"
+                  id="anfima-plugin-manager-dropdown"
+                  uk-dropdown="auto-update: false; close-on-scroll: true; mode: click; pos: top-right"
+                >
+                  <button id="anfima-plugin-manager-refresh" class="uk-button uk-button-primary uk-button-small uk-margin-small">
+                    Refresh
+                  </button>
+                  <button id="anfima-plugin-manager-install-all" class="uk-button uk-button-primary uk-button-small uk-margin-small">
+                    Install All
+                  </button>
+                  <button id="anfima-plugin-manager-install-bundle" class="uk-button uk-button-primary uk-button-small uk-margin-small">
+                    Install Bundle
+                  </button>
+                  <button id="anfima-plugin-manager-remove-all" class="uk-button uk-button-primary uk-button-small uk-margin-small">
+                    Remove All
+                  </button>
+                  <button id="anfima-plugin-manager-log-out" class="uk-button uk-button-primary uk-button-small uk-margin-small">
+                    Log out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p id="anfima-plugin-manager-signin-status">
+            Not signed in.
+          </p>
+          <div class="uk-flex-center uk-grid uk-grid-divider" id="anfima-plugin-manager-grid" uk-grid uk-height-match="target: > div > .uk-card">
+          </div>
+        </div>
+        <!-- /grid -->
+      </div>
+      <!-- /plugin-manager -->
+
+      <!-- preset-manager -->
+      <!--
+      <div class="anfima-page uk-animation-slide-bottom-small uk-animation-fast uk-container" id="anfima-page-preset-manager">
+      </div>
+      -->
+      <!-- /preset-manager -->
+
+      <!-- tools -->
+      <div class="anfima-page uk-animation-slide-bottom-small uk-animation-fast uk-container" id="anfima-page-tools">
+        <!-- install-bundle-modal -->
+        <form class="uk-modal" id="anfima-tools-settings-edit-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p>
+                WARNING: only edit settings you know are compatible!<br>
+                Cancel now if you do not know what you are doing!
+              </p>
+              <label for="anfima-tools-settings-edit-modal-key-input">
+                Key:
+              </label>
+              <input class="uk-input" id="anfima-tools-settings-edit-modal-key-input" type="text" autocomplete="off" autofocus required />
+              <label for="anfima-tools-settings-edit-modal-value-input">
+                Value:
+              </label>
+              <input class="uk-input" id="anfima-tools-settings-edit-modal-value-input" type="text" autocomplete="off" required />
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Change</button>
+            </div>
+          </div>
+        </form>
+        <!-- /install-bundle-modal -->
+
+        <!-- warning-modal -->
+        <form class="uk-modal" id="anfima-tools-warning-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p><span>If you see this message, something went wrong!<span></p>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-danger" type="submit">Proceed</button>
+            </div>
+          </div>
+        </form>
+        <!-- /warning-modal -->
+
+        <div class="uk-container uk-margin-bottom">
+          <button id="anfima-tools-reboot" class="uk-button uk-button-primary">Reboot</button>
+          <br>
+          <span>Reboots the unit.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-reboot-restore" class="uk-button uk-button-primary">Reboot into Restore</button>
+          <br>
+          <span>Reboots into restore mode, which can be used for manual OS updates.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-install-update-file" class="uk-button uk-button-primary">Install update file</button>
+          <br>
+          <span>Install a KosmOS update file.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-backup-export" class="uk-button uk-button-primary">Backup (export)</button>
+          <br>
+          <span>Backup device files, presets and settings as a single file, which can be imported later or on a different unit.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-backup-import" class="uk-button uk-button-primary">Backup (import)</button>
+          <br>
+          <span>Import a device backup.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-export-logs" class="uk-button uk-button-primary">Export Logs</button>
+          <br>
+          <span>Export the entire logs of the unit, from kernel messages to system services.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-settings-edit" class="uk-button uk-button-primary">Edit Settings</button>
+          <br>
+          <span>Edit device-specific settings.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-settings-export" class="uk-button uk-button-primary">Export Settings</button>
+          <br>
+          <span>Export all device-specific settings.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-reset-user-settings" class="uk-button uk-button-primary">Reset user presets and settings</button>
+          <br>
+          <span>DANGEROUS: Deletes user presets and resets settings; does not delete cabinet files, neural model files, plugins or licenses.</span>
+        </div>
+      </div>
+      <!-- /tools -->
+
+      <!-- info -->
+      <div class="anfima-page uk-animation-slide-bottom-small uk-animation-fast uk-container" id="anfima-page-info">
+        <div class="uk-container uk-margin">
+          <h3>About</h3>
+          <b class="uk-width-small">Version:</b>
+          <span class="uk-width-small" id="anfima-info-version"></span>
+          <br>
+          <b class="uk-width-small">Build Number:</b>
+          <span class="uk-width-small" id="anfima-info-build-number"></span>
+          <br>
+          <b class="uk-width-small">Edition:</b>
+          <span class="uk-width-small" id="anfima-info-edition"></span>
+        </div>
+        <div class="uk-container uk-margin">
+          <h3>Offline Status</h3>
+          <b class="uk-width-small">Device check:</b>
+          <span class="uk-width-small" id="anfima-info-device-status"></span>
+        </div>
+        <div class="uk-container uk-margin">
+          <h3>Online Status</h3>
+          <b class="uk-width-small">Online check:</b>
+          <span class="uk-width-small" id="anfima-info-online-status"></span>
+        </div>
+      </div>
+      <!-- /info -->
+
+    </div>
+    <!-- /main-container -->
+
+    <script src="uikit/uikit-js.min.js?v=@UIKIT_VERSION@"></script>
+    <script src="uikit/uikit-icons.min.js?v=@UIKIT_VERSION@"></script>
+  </body>
+</html>

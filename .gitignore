@@ -1,0 +1,11 @@
+/deps/emsdk/upstream
+CMakeFiles/
+build/
+build-win64/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+compile_commands.json
+.DS_Store
+.cache
+*.kdev4
