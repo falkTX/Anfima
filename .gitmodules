@@ -1,0 +1,12 @@
+[submodule "deps/hidapi"]
+	path = deps/hidapi
+	url = https://github.com/libusb/hidapi.git
+[submodule "deps/libfios"]
+	path = deps/libfios
+	url = https://github.com/Darkglass-Electronics/libfios.git
+[submodule "deps/dpf"]
+	path = deps/dpf
+	url = https://github.com/DISTRHO/DPF.git
+[submodule "deps/bittyhttp"]
+	path = deps/bittyhttp
+	url = https://github.com/falkTX/BittyHTTP.git

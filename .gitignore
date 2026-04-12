@@ -1,0 +1,9 @@
+CMakeFiles/
+build/
+build-win64/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+.DS_Store
+.cache
+*.kdev4

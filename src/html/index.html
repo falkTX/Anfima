@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#222" />
+    <link rel="stylesheet" type="text/css" href="uikit/uikit-css.min.css?v=@UIKIT_VERSION@">
+    <script defer src="js/anfima.js?v=@VERSION@"></script>
+    <script defer src="js/backend.js?v=@VERSION@"></script>
+    <script defer src="js/constants.js?v=@VERSION@"></script>
+    <script defer src="js/html.js?v=@VERSION@"></script>
+    <script defer src="js/logger.js?v=@VERSION@"></script>
+    <script defer src="js/reset-user-data.js?v=@VERSION@"></script>
+    <script defer src="js/utils.js?v=@VERSION@"></script>
+    <script defer src="js/backends/dpf.js?v=@VERSION@"></script>
+    <script defer src="js/backends/dummy.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-bluetooth.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-hid.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-midi.js?v=@VERSION@"></script>
+    <script defer src="js/backends/web-serial.js?v=@VERSION@"></script>
+    <script defer src="js/pages/file-manager.js?v=@VERSION@"></script>
+    <script defer src="js/pages/tools.js?v=@VERSION@"></script>
+    <style>
+      .anfima-text-pre {
+        white-space: pre;
+        text-wrap: wrap;
+      }
+    </style>
+    <title>Anfima</title>
+  </head>
+  <body class="anfima-welcome uk-background-secondary uk-light uk-height-viewport">
+
+    <noscript>
+      <p><span>Error: JavaScript is required for operating this application</span></p>
+    </noscript>
+
+    <!-- modals -->
+    <div class="uk-modal" id="anfima-modal-report" uk-modal>
+      <div class="uk-modal-dialog">
+        <div class="uk-modal-body uk-background-secondary">
+          <p class="anfima-text-pre">If you see this message, something went wrong!</p>
+        </div>
+        <div class="uk-modal-footer uk-background-secondary uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- /modals -->
+
+    <!-- welcome-overlay -->
+    <div class="uk-height-viewport uk-width-viewport uk-animation-fade uk-invisible" id="anfima-welcome-overlay">
+        <div class="uk-position-cover" style="overflow:hidden">
+          <video autoplay loop muted webkit-playsinline playsinline class="uk-height-viewport uk-width-viewport">
+            <source src="resources/anagram.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="uk-overlay uk-overlay-primary uk-position-cover">
+          <div class="uk-position-center">
+            <div class="uk-width-medium uk-padding-small">
+              <div class="uk-text-center uk-text-large uk-margin">
+                <h1>Anfima</h1>
+                <span>Anagram File Manager</span>
+              </div>
+              <div class="uk-text-center uk-margin">
+                <span id="anfima-welcome-status">Press the Connect button to begin</span>
+              </div>
+              <button
+                class="uk-button uk-button-primary uk-border-pill uk-invisible uk-width-1-1"
+                id="anfima-connect"
+                type="button"
+              >
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- /welcome-overlay -->
+
+    <!-- navbar -->
+    <nav class="uk-hidden uk-navbar-container uk-navbar-transparent" id="anfima-navbar">
+      <div class="uk-container">
+        <div uk-navbar>
+          <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+              <li class="anfima-navbar-page" id="anfima-navbar-file-manager">
+                <a href="#">File Manager</a>
+              </li>
+              <li class="anfima-navbar-page" id="anfima-navbar-tools">
+                <a href="#">Tools</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- /navbar -->
+
+    <!-- main-container -->
+    <div class="uk-hidden uk-container" id="anfima-main-container"> <!--style="background-color:#111;"-->
+
+      <!-- file-manager -->
+      <div class="anfima-page uk-container" id="anfima-page-file-manager">
+
+        <!-- add-modal -->
+        <form class="uk-modal" id="anfima-file-manager-add-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <label>Name:</label>
+              <input class="uk-input" type="text" autofocus required>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Add</button>
+            </div>
+          </div>
+        </form>
+        <!-- /add-modal -->
+
+        <!-- remove-modal -->
+        <form class="uk-modal" id="anfima-file-manager-remove-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <p class="anfima-text-pre">If you see this message, something went wrong!</p>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-danger" type="submit">Delete</button>
+            </div>
+          </div>
+        </form>
+        <!-- /remove-modal -->
+
+        <!-- rename-modal -->
+        <form class="uk-modal" id="anfima-file-manager-rename-modal" uk-modal>
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body uk-background-secondary">
+              <label>Name:</label>
+              <input class="uk-input" type="text" autofocus required>
+            </div>
+            <div class="uk-modal-footer uk-background-secondary uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+              <button class="uk-button uk-button-primary" type="submit">Rename</button>
+            </div>
+          </div>
+        </form>
+        <!-- /rename-modal -->
+
+        <!-- filelist -->
+        <div
+          class="uk-container"
+          id="anfima-file-manager-filter"
+          uk-filter="target: #anfima-file-manager-filelist; animation: fade"
+        >
+          <div class="uk-flex uk-flex-between uk-padding-small">
+            <div class="uk-grid-small uk-grid-divider uk-child-width-auto" uk-grid>
+              <ul class="uk-subnav uk-subnav-pill" uk-margin>
+                <li class="uk-active" uk-filter-control="[data-dir-name='cabinets']">
+                  <a href="#">Cabinets</a>
+                </li>
+                <li uk-filter-control="[data-dir-name='neural-models']">
+                  <a href="#">Neural Models</a>
+                </li>
+              </ul>
+            </div>
+            <div class="uk-text-right" id="anfima-file-manager-buttons">
+              <button
+                id="anfima-file-manager-select-all"
+                class="uk-button uk-button-default uk-button-small uk-margin-small uk-margin-small-top uk-invisible"
+              >
+                Select All
+              </button>
+              <button
+                id="anfima-file-manager-remove"
+                class="uk-button uk-button-danger uk-button-small uk-icon uk-margin-small uk-invisible"
+                uk-icon="icon: trash"
+              >
+              </button>
+              <button
+                id="anfima-file-manager-add"
+                class="uk-button uk-button-primary uk-button-small uk-icon uk-margin-small"
+                uk-icon="icon: plus"
+              >
+              </button>
+            </div>
+          </div>
+          <ul class="uk-list uk-list-collapse uk-list-striped" id="anfima-file-manager-filelist">
+          </ul>
+          <div class="uk-hidden uk-placeholder uk-text-center" id="anfima-file-manager-placeholder">
+              No user files.
+          </div>
+        </div>
+        <!-- /filelist -->
+
+      </div>
+      <!-- /file-manager -->
+
+      <!-- tools -->
+      <div class="anfima-page uk-container" id="anfima-page-tools">
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-reboot" class="uk-button uk-button-primary">Reboot</button>
+          <br>
+          <span>Reboots the unit.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-reboot-restore" class="uk-button uk-button-primary">Reboot into Restore</button>
+          <br>
+          <span>Reboots into restore mode, which can be used for manual OS updates.</span>
+        </div>
+        <div class="uk-container uk-margin">
+          <button id="anfima-tools-reset-user-data" class="uk-button uk-button-primary">Reset user data</button>
+          <br>
+          <span>DANGEROUS: Deletes all user presets and resets user settings; does not delete any plugins or licenses.</span>
+        </div>
+      </div>
+      <!-- /tools -->
+
+    </div>
+    <!-- /main-container -->
+
+    <script src="uikit/uikit-js.min.js?v=@UIKIT_VERSION@"></script>
+    <script src="uikit/uikit-icons.min.js?v=@UIKIT_VERSION@"></script>
+  </body>
+</html>
