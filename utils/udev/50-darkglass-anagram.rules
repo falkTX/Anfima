@@ -1,0 +1,4 @@
+# Give regular users permission to communication with Anagram as USB device.
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2fa6", ATTRS{idProduct}=="2500", TAG+="uaccess"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2fa6", ATTRS{idProduct}=="2500", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="2fa6", ATTRS{idProduct}=="2500", TAG+="uaccess"
